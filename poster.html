@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-granular Uncertainty Quantification in LLMs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0; /* Light gray background for the page */
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        .poster-container {
+            width: 1400px; /* Fixed width for poster aspect ratio */
+            background-color: white;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .theme-bg { background-color: #0d162e; }
+        .theme-text { color: #0d162e; }
+        .theme-border { border-color: #0d162e; }
+        
+        .section-header {
+            background-color: #0d162e;
+            color: white;
+            text-transform: uppercase;
+            font-weight: 700;
+            text-align: center;
+            padding: 0.25rem 0.5rem;
+            border-top-left-radius: 0.375rem;
+            border-top-right-radius: 0.375rem;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+        .section-content {
+            border: 1px solid #e5e7eb;
+            border-top: none;
+            border-bottom-left-radius: 0.375rem;
+            border-bottom-right-radius: 0.375rem;
+            padding: 0.75rem;
+            background-color: white;
+            height: calc(100% - 1.75rem); /* Fill remaining space */
+        }
+        .section-wrapper {
+            margin-bottom: 0.75rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .text-xs-custom { font-size: 0.7rem; line-height: 1.1rem; }
+        .text-xxs { font-size: 0.6rem; line-height: 0.85rem; }
+    </style>
+</head>
+<body>
+
+<div class="poster-container flex flex-col">
+    <!-- HEADER -->
+    <header class="theme-bg text-white flex justify-between items-center p-4 border-b-4 border-yellow-400">
+        <!-- University Logo Area -->
+        <div class="flex items-center bg-white rounded p-2 text-black w-72 shadow-inner">
+            <div class="relative w-14 h-16 border-[3px] border-[#f26522] flex flex-col items-center justify-center rounded-b-xl overflow-hidden bg-white shrink-0">
+                <div class="absolute top-0 w-full h-1 bg-[#f26522]"></div>
+                <div class="flex flex-col items-center mt-1">
+                    <i class="fas fa-book-open text-[#f26522] text-[10px] mb-0.5"></i>
+                    <span class="font-black text-sm leading-none tracking-tighter">UIU</span>
+                    <div class="flex space-x-1 mt-0.5">
+                        <div class="w-1 h-1 bg-yellow-400 rounded-full"></div>
+                        <div class="w-1 h-1 bg-[#f26522] rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="ml-3 flex flex-col justify-center">
+                <span class="font-black text-[18px] leading-tight tracking-tight text-[#0d162e]">UNITED</span>
+                <span class="font-bold text-[9px] leading-tight tracking-[0.2em] text-[#0d162e] uppercase">International</span>
+                <span class="font-black text-[18px] leading-tight tracking-tight text-[#0d162e]">UNIVERSITY</span>
+            </div>
+            <div class="absolute bottom-4 left-10 transform -rotate-12 text-[6px] font-bold text-[#f26522] uppercase tracking-widest whitespace-nowrap">Quest for Excellence</div>
+        </div>
+
+        <!-- Title & Authors -->
+        <div class="flex-1 text-center px-6">
+            <h1 class="text-4xl font-extrabold text-white mb-2 tracking-tight">Multi-granular Uncertainty Quantification in LLMs</h1>
+            <p class="text-yellow-400 font-semibold text-[15px] mb-0.5">
+                Abdur Rahman Rafi (0112230437) &nbsp;|&nbsp; Tanushree Podder (0112230816) &nbsp;|&nbsp; Shadmaan Sabit (0112230693)
+            </p>
+            <p class="text-yellow-400 font-semibold text-[15px] mb-1">
+                Mehedi Hassan Shomik (0112230424) &nbsp;|&nbsp; Raisoul Rayat (0112230133)
+            </p>
+            <p class="text-white text-sm font-medium tracking-wide">
+                <span class="text-yellow-400">Department of Computer Science and Engineering</span> &nbsp;|&nbsp; United International University
+            </p>
+        </div>
+
+        <!-- Number Circle -->
+        <div class="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center bg-[#0d162e] shrink-0 mr-4 shadow-lg">
+            <span class="text-5xl font-black text-white">1</span>
+        </div>
+    </header>
+
+    <!-- MAIN BODY -->
+    <div class="flex flex-row gap-4 p-4 flex-1 items-stretch">
+        
+        <!-- COLUMN 1 (Left) -->
+        <div class="w-[26%] flex flex-col">
+            
+            <!-- Introduction -->
+            <div class="section-wrapper flex-none">
+                <div class="section-header">Introduction</div>
+                <div class="section-content flex items-center gap-3">
+                    <div class="w-12 h-12 flex-shrink-0 text-blue-600 flex items-center justify-center">
+                        <i class="fas fa-brain text-4xl"></i>
+                    </div>
+                    <p class="text-xs-custom text-gray-800 text-justify">
+                        Large Language Models (LLMs) are widely used in critical applications, yet they often generate confident but incorrect responses. Our project proposes a multi-granular uncertainty quantification (MGUQ) framework that estimates uncertainty at the token, claim, and semantic levels to provide reliable and interpretable confidence scores.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Problem Statement -->
+            <div class="section-wrapper flex-none">
+                <div class="section-header">Problem Statement</div>
+                <div class="section-content flex items-center gap-3">
+                    <div class="w-12 h-12 flex-shrink-0 text-red-600 flex items-center justify-center">
+                        <i class="fas fa-exclamation-triangle text-4xl"></i>
+                    </div>
+                    <p class="text-xs-custom text-gray-800 text-justify">
+                        LLMs can produce plausible but incorrect or hallucinated outputs with high confidence. Existing uncertainty estimation methods are often limited to a single granularity and fail to capture uncertainty comprehensively across different levels of understanding.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Goal -->
+            <div class="section-wrapper flex-none">
+                <div class="section-header">Goal</div>
+                <div class="section-content flex items-center gap-3">
+                    <div class="w-12 h-12 flex-shrink-0 text-green-600 flex items-center justify-center">
+                        <i class="fas fa-bullseye text-4xl"></i>
+                    </div>
+                    <p class="text-xs-custom text-gray-800 text-justify">
+                        To develop a calibrated framework that quantifies uncertainty at multiple granularities (token, claim, and semantic) and aggregates them into a reliable confidence score for each LLM response.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Key Objectives -->
+            <div class="section-wrapper flex-none">
+                <div class="section-header">Key Objectives</div>
+                <div class="section-content">
+                    <ul class="text-xs-custom text-gray-800 space-y-1.5 list-none">
+                        <li class="flex items-start"><i class="fas fa-check-circle text-theme-text mt-1 mr-2 text-[10px]"></i> Capture uncertainty at token, claim, and semantic levels.</li>
+                        <li class="flex items-start"><i class="fas fa-check-circle text-theme-text mt-1 mr-2 text-[10px]"></i> Aggregate multi-granular uncertainty into a single calibrated score.</li>
+                        <li class="flex items-start"><i class="fas fa-check-circle text-theme-text mt-1 mr-2 text-[10px]"></i> Evaluate and calibrate using standard UQ benchmarks.</li>
+                        <li class="flex items-start"><i class="fas fa-check-circle text-theme-text mt-1 mr-2 text-[10px]"></i> Provide interpretable visualizations and reports.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- System Architecture -->
+            <div class="section-wrapper flex-1 flex flex-col mb-0">
+                <div class="section-header">System Architecture (Overview)</div>
+                <div class="section-content flex flex-col justify-center relative py-6">
+                    <!-- Flow Diagram -->
+                    <div class="flex items-center justify-between w-full relative z-10">
+                        <!-- User -->
+                        <div class="flex flex-col items-center">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mb-1 border border-blue-200"><i class="fas fa-user"></i></div>
+                            <span class="text-xxs font-bold text-center">User<br>Query</span>
+                        </div>
+                        <i class="fas fa-arrow-right text-gray-400 text-xs mx-1"></i>
+                        <!-- LLM -->
+                        <div class="flex flex-col items-center">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mb-1 border border-blue-200"><i class="fas fa-brain"></i></div>
+                            <span class="text-xxs font-bold text-center">LLM<br>(Sampling)</span>
+                        </div>
+                        <i class="fas fa-arrow-right text-gray-400 text-xs mx-1"></i>
+                        <!-- Responses Stack -->
+                        <div class="flex flex-col items-center relative">
+                            <div class="absolute -left-3 top-1/2 w-3 border-t border-gray-400 border-dashed"></div>
+                            <div class="border border-gray-300 rounded-sm bg-white p-1 text-[8px] mb-0.5 w-16 text-center shadow-sm">Response 1</div>
+                            <div class="border border-gray-300 rounded-sm bg-white p-1 text-[8px] mb-0.5 w-16 text-center shadow-sm">Response 2</div>
+                            <div class="text-[8px] leading-none mb-0.5">...</div>
+                            <div class="border border-gray-300 rounded-sm bg-white p-1 text-[8px] w-16 text-center shadow-sm">Response N</div>
+                        </div>
+                        <i class="fas fa-arrow-right text-gray-400 text-xs mx-1"></i>
+                        <!-- UQ Levels -->
+                        <div class="flex flex-col gap-1 w-24">
+                            <div class="border border-purple-300 bg-purple-50 text-purple-700 text-[8px] p-1 rounded text-center whitespace-nowrap">Token-Level UQ</div>
+                            <div class="border border-purple-300 bg-purple-50 text-purple-700 text-[8px] p-1 rounded text-center whitespace-nowrap">Claim-Level UQ</div>
+                            <div class="border border-purple-300 bg-purple-50 text-purple-700 text-[8px] p-1 rounded text-center whitespace-nowrap">Semantic-Level UQ</div>
+                        </div>
+                        <i class="fas fa-arrow-right text-gray-400 text-xs mx-1"></i>
+                        <!-- Aggregation -->
+                        <div class="border border-green-300 bg-green-50 text-green-700 text-[8px] p-1 rounded text-center w-16">
+                            Aggregation<br>&<br>Calibration
+                        </div>
+                        <i class="fas fa-arrow-right text-gray-400 text-xs mx-1"></i>
+                        <!-- Final Score -->
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-6 h-6 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 mb-1 border border-yellow-300 shadow-sm"><i class="fas fa-star text-[10px]"></i></div>
+                            <span class="text-[8px] font-bold text-gray-800">Final<br>Uncertainty<br>Score</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Feedback Loop Line -->
+                    <div class="absolute bottom-2 left-[20%] w-[55%] h-6 border-b border-l border-dashed border-gray-400 flex items-end justify-center rounded-bl-lg">
+                        <i class="fas fa-caret-left absolute -left-[5px] -top-1 text-gray-400 text-xs"></i>
+                        <span class="bg-white px-2 text-[9px] text-gray-600 font-medium translate-y-1.5">Feedback for Calibration</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMN 2 (Center) -->
+        <div class="w-[46%] flex flex-col">
+            
+            <!-- Methodology Pipeline -->
+            <div class="section-wrapper flex-1">
+                <div class="section-header">Methodology: MGUQ Pipeline</div>
+                <div class="section-content p-0 flex flex-col">
+                    
+                    <!-- Step 1 -->
+                    <div class="flex items-center p-3 border-b border-gray-200 bg-gray-50/50">
+                        <div class="w-8 h-8 rounded bg-theme-bg text-white flex items-center justify-center font-bold text-lg shrink-0">1</div>
+                        <div class="w-12 flex justify-center text-blue-500 shrink-0"><i class="fas fa-file-alt text-3xl"></i></div>
+                        <div class="flex-1 px-3">
+                            <h4 class="font-bold text-sm text-gray-800">Multi-Sample Generation</h4>
+                            <p class="text-xs text-gray-600 mt-0.5 leading-snug">Generate N diverse responses from the LLM using sampling techniques.</p>
+                        </div>
+                        <div class="w-32 flex flex-col items-center shrink-0">
+                            <span class="text-[10px] font-bold text-gray-500 mb-1">Output</span>
+                            <div class="flex gap-1 text-blue-400 text-xl items-end">
+                                <i class="fas fa-comment-alt"></i>
+                                <i class="fas fa-comment-alt transform scale-y-90"></i>
+                                <div class="border border-gray-300 rounded px-1 text-[8px] text-gray-400 h-5 flex items-center bg-white shadow-sm">••••</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex items-center p-3 border-b border-gray-200">
+                        <div class="w-8 h-8 rounded bg-theme-bg text-white flex items-center justify-center font-bold text-lg shrink-0">2</div>
+                        <div class="w-12 flex items-end justify-center shrink-0 h-8 gap-0.5">
+                            <div class="w-2 h-4 bg-green-500 rounded-t-sm"></div>
+                            <div class="w-2 h-6 bg-yellow-400 rounded-t-sm"></div>
+                            <div class="w-2 h-8 bg-red-500 rounded-t-sm"></div>
+                        </div>
+                        <div class="flex-1 px-3">
+                            <h4 class="font-bold text-sm text-gray-800">Uncertainty at the Token Level</h4>
+                            <p class="text-xs text-gray-600 mt-0.5 leading-snug">Compute token-level uncertainty using entropy of the next-token distribution.</p>
+                        </div>
+                        <div class="w-32 flex flex-col items-center shrink-0">
+                            <span class="text-[10px] font-bold text-gray-500 mb-1">Output</span>
+                            <div class="flex gap-0.5">
+                                <div class="w-4 h-4 bg-green-500 rounded-sm"></div>
+                                <div class="w-4 h-4 bg-green-400 rounded-sm"></div>
+                                <div class="w-4 h-4 bg-yellow-400 rounded-sm"></div>
+                                <div class="w-4 h-4 bg-orange-400 rounded-sm"></div>
+                                <div class="w-4 h-4 bg-red-500 rounded-sm"></div>
+                                <div class="text-gray-400 text-[10px] ml-1">...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="flex items-center p-3 border-b border-gray-200 bg-gray-50/50">
+                        <div class="w-8 h-8 rounded bg-theme-bg text-white flex items-center justify-center font-bold text-lg shrink-0">3</div>
+                        <div class="w-12 flex justify-center text-blue-500 shrink-0"><i class="fas fa-list-ul text-3xl"></i></div>
+                        <div class="flex-1 px-3">
+                            <h4 class="font-bold text-sm text-gray-800">Claim-Level Decomposition & Consistency</h4>
+                            <p class="text-xs text-gray-600 mt-0.5 leading-snug">Decompose responses into atomic claims and measure consistency across samples.</p>
+                        </div>
+                        <div class="w-32 flex flex-col items-center shrink-0">
+                            <span class="text-[10px] font-bold text-gray-500 mb-1">Output</span>
+                            <div class="flex gap-2 text-lg">
+                                <div class="w-5 h-5 rounded-full bg-green-500 text-white flex items-center justify-center"><i class="fas fa-check text-[10px]"></i></div>
+                                <div class="w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center"><i class="fas fa-times text-[10px]"></i></div>
+                                <div class="w-5 h-5 rounded-full bg-yellow-400 text-white flex items-center justify-center"><i class="fas fa-minus text-[10px]"></i></div>
+                                <div class="text-gray-400 text-[10px] ml-1 mt-1">...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="flex items-center p-3 border-b border-gray-200">
+                        <div class="w-8 h-8 rounded bg-theme-bg text-white flex items-center justify-center font-bold text-lg shrink-0">4</div>
+                        <div class="w-12 flex justify-center shrink-0">
+                            <!-- Node network icon -->
+                            <div class="relative w-8 h-8">
+                                <div class="absolute top-0 left-1/2 w-2 h-2 bg-blue-500 rounded-full transform -translate-x-1/2"></div>
+                                <div class="absolute bottom-0 left-0 w-2 h-2 bg-blue-500 rounded-full"></div>
+                                <div class="absolute bottom-0 right-0 w-2 h-2 bg-blue-500 rounded-full"></div>
+                                <div class="absolute top-1/2 left-1/2 w-3 h-3 bg-blue-700 rounded-full transform -translate-x-1/2 -translate-y-1/2 z-10"></div>
+                                <!-- lines (simplified) -->
+                                <svg class="absolute inset-0 w-full h-full" z-index="-1"><line x1="16" y1="4" x2="16" y2="16" stroke="#93c5fd" stroke-width="2"/><line x1="4" y1="28" x2="16" y2="16" stroke="#93c5fd" stroke-width="2"/><line x1="28" y1="28" x2="16" y2="16" stroke="#93c5fd" stroke-width="2"/></svg>
+                            </div>
+                        </div>
+                        <div class="flex-1 px-3">
+                            <h4 class="font-bold text-sm text-gray-800">Uncertainty at the Semantic Level</h4>
+                            <p class="text-xs text-gray-600 mt-0.5 leading-snug">Use embeddings and semantic similarity to measure uncertainty in meaning.</p>
+                        </div>
+                        <div class="w-32 flex flex-col items-center shrink-0">
+                            <span class="text-[10px] font-bold text-gray-500 mb-1">Output</span>
+                            <div class="flex gap-0.5 w-full max-w-[80px]">
+                                <div class="h-4 flex-1 bg-indigo-900 rounded-l-sm"></div>
+                                <div class="h-4 flex-1 bg-indigo-700"></div>
+                                <div class="h-4 flex-1 bg-indigo-500"></div>
+                                <div class="h-4 flex-1 bg-indigo-300"></div>
+                                <div class="h-4 flex-1 bg-indigo-100 rounded-r-sm"></div>
+                                <div class="text-gray-400 text-[10px] ml-1">...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 5 -->
+                    <div class="flex items-center p-3 border-b border-gray-200 bg-gray-50/50">
+                        <div class="w-8 h-8 rounded bg-theme-bg text-white flex items-center justify-center font-bold text-lg shrink-0">5</div>
+                        <div class="w-12 flex justify-center text-blue-500 shrink-0 text-3xl font-serif">Σ</div>
+                        <div class="flex-1 px-3">
+                            <h4 class="font-bold text-sm text-gray-800">Aggregation Function</h4>
+                            <p class="text-xs text-gray-600 mt-0.5 leading-snug">Aggregate uncertainties from all granularities into a unified uncertainty score.</p>
+                        </div>
+                        <div class="w-32 flex flex-col items-center shrink-0">
+                            <span class="text-[10px] font-bold text-gray-500 mb-0.5">Output</span>
+                            <span class="text-[8px] font-bold text-gray-800 mb-0.5">MGUQ Score</span>
+                            <div class="w-full px-2 relative">
+                                <div class="h-2 w-full bg-gradient-to-r from-green-500 via-yellow-400 to-red-500 rounded-full"></div>
+                                <div class="absolute top-2 left-[70%] w-0 h-0 border-l-[4px] border-r-[4px] border-b-[6px] border-l-transparent border-r-transparent border-b-black"></div>
+                            </div>
+                            <div class="flex justify-between w-full px-2 mt-1">
+                                <span class="text-[8px] text-gray-500">Low</span>
+                                <span class="text-[8px] text-gray-500">High</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 6 -->
+                    <div class="flex items-center p-3 border-b border-gray-200">
+                        <div class="w-8 h-8 rounded bg-theme-bg text-white flex items-center justify-center font-bold text-lg shrink-0">6</div>
+                        <div class="w-12 flex justify-center text-blue-500 shrink-0">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 6-6"/><circle cx="7" cy="16" r="1.5" fill="currentColor"/><circle cx="11" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="16" r="1.5" fill="currentColor"/><circle cx="21" cy="10" r="1.5" fill="currentColor"/></svg>
+                        </div>
+                        <div class="flex-1 px-3">
+                            <h4 class="font-bold text-sm text-gray-800">Calibration</h4>
+                            <p class="text-xs text-gray-600 mt-0.5 leading-snug">Calibrate the aggregated score using reliability diagrams and calibration techniques.</p>
+                        </div>
+                        <div class="w-32 flex flex-col items-center shrink-0">
+                            <span class="text-[10px] font-bold text-gray-500 mb-1">Output</span>
+                            <div class="w-20 h-12 border-l border-b border-gray-400 relative">
+                                <!-- diagonal line -->
+                                <div class="absolute inset-0 border-t border-gray-300 transform origin-bottom-left -rotate-45 w-[141%]"></div>
+                                <!-- plotted line -->
+                                <svg class="absolute inset-0 w-full h-full"><polyline points="0,48 10,40 20,35 30,25 40,20 50,15 60,10 70,5 80,0" fill="none" stroke="#2563eb" stroke-width="1.5"/><circle cx="10" cy="40" r="1.5" fill="#2563eb"/><circle cx="30" cy="25" r="1.5" fill="#2563eb"/><circle cx="50" cy="15" r="1.5" fill="#2563eb"/><circle cx="70" cy="5" r="1.5" fill="#2563eb"/></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 7 -->
+                    <div class="flex items-center p-3 flex-1 bg-gray-50/50 rounded-b-md">
+                        <div class="w-8 h-8 rounded bg-theme-bg text-white flex items-center justify-center font-bold text-lg shrink-0">7</div>
+                        <div class="w-12 flex justify-center text-blue-800 shrink-0 text-3xl"><i class="fas fa-chart-pie"></i></div>
+                        <div class="flex-1 px-3">
+                            <h4 class="font-bold text-sm text-gray-800">Report & Visualization</h4>
+                            <p class="text-xs text-gray-600 mt-0.5 leading-snug">Generate interpretable reports and visualizations for end-users.</p>
+                        </div>
+                        <div class="w-32 flex flex-col items-center shrink-0">
+                            <span class="text-[10px] font-bold text-gray-500 mb-1">Output</span>
+                            <div class="flex gap-2 text-blue-600 text-xl items-end">
+                                <i class="fas fa-chart-pie"></i>
+                                <i class="fas fa-chart-bar"></i>
+                                <i class="fas fa-table text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expected Outcomes & Evaluation Plan Row -->
+            <div class="flex gap-4 mt-3 flex-none h-[140px]">
+                <div class="flex-1 flex flex-col">
+                    <div class="section-header">Expected Outcomes</div>
+                    <div class="section-content flex items-center gap-2">
+                        <div class="w-10 flex justify-center text-theme-text text-3xl"><i class="fas fa-bullseye"></i></div>
+                        <ul class="text-xs-custom text-gray-800 space-y-1 list-disc pl-3 pr-1">
+                            <li>A robust multi-granular UQ framework.</li>
+                            <li>Well-calibrated uncertainty scores.</li>
+                            <li>Improved detection of unreliable outputs.</li>
+                            <li>Comprehensive evaluation and insights.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="flex-1 flex flex-col">
+                    <div class="section-header">Evaluation Plan</div>
+                    <div class="section-content flex items-start gap-2">
+                        <div class="w-10 flex justify-center text-theme-text text-3xl mt-1"><i class="fas fa-clipboard-list"></i></div>
+                        <div class="text-[9px] leading-tight text-gray-800 space-y-1.5 flex-1">
+                            <p><span class="font-bold">Datasets:</span> TruthfulQA, FEVER, Natural Questions, GSM8K</p>
+                            <p><span class="font-bold">Metrics:</span> ECE, NLL, Brier Score, AUROC, Accuracy vs. Coverage</p>
+                            <p><span class="font-bold">Baselines:</span> Token-Entropy, MC Dropout, Self-Consistency, etc.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMN 3 (Right) -->
+        <div class="w-[28%] flex flex-col">
+            
+            <!-- Background -->
+            <div class="section-wrapper flex-none">
+                <div class="section-header">Background</div>
+                <div class="section-content flex items-start gap-3">
+                    <div class="w-10 h-10 flex-shrink-0 text-theme-text flex items-center justify-center mt-1">
+                        <i class="fas fa-layer-group text-4xl"></i>
+                    </div>
+                    <ul class="text-xs-custom text-gray-800 space-y-1.5 list-disc pl-2">
+                        <li><span class="font-bold">Preliminaries:</span> ML algorithms, DL models, and evaluation metrics.</li>
+                        <li><span class="font-bold">Literature Review:</span> Recent UQ methods in LLMs and related works.</li>
+                        <li><span class="font-bold">Gap Analysis:</span> Lack of multi-granular UQ with comprehensive evaluation and calibration.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Gap Analysis -->
+            <div class="section-wrapper flex-none">
+                <div class="section-header">Gap Analysis</div>
+                <div class="section-content p-0">
+                    <div class="grid grid-cols-[auto_1fr_1fr] gap-x-2 gap-y-3 p-3 items-center text-xs-custom">
+                        <div class="col-span-1"></div>
+                        <div class="font-bold text-center border-b pb-1">Existing Limitations</div>
+                        <div class="font-bold text-center border-b pb-1">Our Contributions</div>
+
+                        <div class="flex justify-center"><div class="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center"><i class="fas fa-times text-red-600 text-[10px]"></i></div></div>
+                        <div class="text-gray-700 text-center leading-tight">Single-level uncertainty estimation</div>
+                        <div class="flex items-center justify-center text-center leading-tight"><div class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center mr-1 shrink-0"><i class="fas fa-check text-green-600 text-[8px]"></i></div>Token, Claim & Semantic level uncertainty</div>
+
+                        <div class="flex justify-center"><div class="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center"><i class="fas fa-times text-red-600 text-[10px]"></i></div></div>
+                        <div class="text-gray-700 text-center leading-tight">Poor calibration & misaligned metrics</div>
+                        <div class="flex items-center justify-center text-center leading-tight"><div class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center mr-1 shrink-0"><i class="fas fa-check text-green-600 text-[8px]"></i></div>Calibrated, well-aligned uncertainty scores</div>
+
+                        <div class="flex justify-center"><div class="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center"><i class="fas fa-times text-red-600 text-[10px]"></i></div></div>
+                        <div class="text-gray-700 text-center leading-tight">Limited benchmarks & datasets</div>
+                        <div class="flex items-center justify-center text-center leading-tight"><div class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center mr-1 shrink-0"><i class="fas fa-check text-green-600 text-[8px]"></i></div>Comprehensive UQ benchmarks</div>
+
+                        <div class="flex justify-center"><div class="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center"><i class="fas fa-times text-red-600 text-[10px]"></i></div></div>
+                        <div class="text-gray-700 text-center leading-tight">Little interpretability & visualization</div>
+                        <div class="flex items-center justify-center text-center leading-tight"><div class="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center mr-1 shrink-0"><i class="fas fa-check text-green-600 text-[8px]"></i></div>Interpretable reports & visual dashboards</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Why Uncertainty Quantification Matters -->
+            <div class="section-wrapper flex-none">
+                <div class="section-header">Why Uncertainty Quantification Matters</div>
+                <div class="section-content flex justify-around items-start pt-4 pb-2">
+                    <div class="flex flex-col items-center text-center w-1/4 px-1">
+                        <i class="fas fa-shield-alt text-blue-600 text-3xl mb-2"></i>
+                        <span class="text-[9px] font-bold leading-tight">Builds trust<br>in LLM outputs</span>
+                    </div>
+                    <div class="flex flex-col items-center text-center w-1/4 px-1">
+                        <i class="fas fa-balance-scale text-blue-600 text-3xl mb-2"></i>
+                        <span class="text-[9px] font-bold leading-tight">Reduces risks in<br>critical decisions</span>
+                    </div>
+                    <div class="flex flex-col items-center text-center w-1/4 px-1">
+                        <i class="fas fa-search text-blue-600 text-3xl mb-2"></i>
+                        <span class="text-[9px] font-bold leading-tight">Detects hallucinations<br>and errors</span>
+                    </div>
+                    <div class="flex flex-col items-center text-center w-1/4 px-1">
+                        <i class="fas fa-chart-line text-blue-600 text-3xl mb-2"></i>
+                        <span class="text-[9px] font-bold leading-tight">Improves reliability<br>and safety</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Right Area (Tech Stack + Info) -->
+            <div class="flex gap-4 flex-1">
+                <!-- Tech Stack -->
+                <div class="flex flex-col w-[45%]">
+                    <div class="section-header">Technology Stack</div>
+                    <div class="section-content flex flex-col justify-between py-3">
+                        <div class="text-center text-[10px] font-bold mb-2">Languages & Frameworks</div>
+                        <div class="flex justify-around items-end mb-4">
+                            <div class="flex flex-col items-center"><i class="fab fa-python text-blue-600 text-2xl mb-1"></i><span class="text-[8px] font-bold">Python</span></div>
+                            <div class="flex flex-col items-center"><i class="fas fa-fire text-orange-500 text-2xl mb-1"></i><span class="text-[8px] font-bold">PyTorch</span></div>
+                            <div class="flex flex-col items-center"><span class="text-yellow-500 text-2xl mb-1">🤗</span><span class="text-[8px] font-bold">Transformers</span></div>
+                        </div>
+                        <div class="text-center text-[10px] font-bold mb-2">Tools & Libraries</div>
+                        <div class="flex justify-around items-end">
+                            <div class="flex items-center gap-1"><div class="w-4 h-4 bg-blue-500 rounded-sm flex items-center justify-center text-white text-[8px] font-bold">N</div><span class="text-[9px] font-bold">NumPy</span></div>
+                            <div class="flex items-center gap-1"><div class="w-4 h-4 bg-orange-400 rounded-full flex items-center justify-center text-white text-[8px] font-bold">sc</div><span class="text-[9px] font-bold">learn</span></div>
+                            <div class="flex flex-col items-center"><i class="fas fa-chart-pie text-green-500 text-lg mb-0.5"></i><span class="text-[8px] font-bold">Matplotlib</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project Info & Supervisor -->
+                <div class="flex flex-col w-[55%] gap-3">
+                    <div class="flex flex-col flex-none">
+                        <div class="section-header">Project Info</div>
+                        <div class="section-content py-2 px-3">
+                            <ul class="text-[9px] text-gray-800 space-y-2 list-none">
+                                <li class="flex items-start"><i class="fas fa-tag w-4 text-center text-theme-text mt-0.5"></i> <span class="flex-1"><span class="font-bold">Type:</span> Final Year Design Project I (FYDP-1)</span></li>
+                                <li class="flex items-start"><i class="fas fa-building w-4 text-center text-theme-text mt-0.5"></i> <span class="flex-1"><span class="font-bold">Department:</span> CSE</span></li>
+                                <li class="flex items-start"><i class="fas fa-university w-4 text-center text-theme-text mt-0.5"></i> <span class="flex-1"><span class="font-bold">Institution:</span> United International University</span></li>
+                                <li class="flex items-start"><i class="fas fa-calendar-alt w-4 text-center text-theme-text mt-0.5"></i> <span class="flex-1"><span class="font-bold">Duration:</span> Spring 26 - Fall 26</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="flex flex-col flex-1">
+                        <div class="section-header">Supervisor</div>
+                        <div class="section-content flex items-center gap-3 py-2">
+                            <div class="w-8 h-8 rounded-full bg-theme-bg text-white flex items-center justify-center text-lg shrink-0">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-bold text-xs text-gray-800">Nahid Hossain</span>
+                                <span class="text-[9px] text-gray-600 leading-tight">Assistant Professor, Dept of CSE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
